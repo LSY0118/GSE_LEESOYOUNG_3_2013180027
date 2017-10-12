@@ -14,8 +14,10 @@ but WITHOUT ANY WARRANTY.
 #include "Dependencies\freeglut.h"
 
 #include "Renderer.h"
+#include "GameObject.h"
 
 Renderer *g_Renderer = NULL;
+GameObject *g_Object = NULL;
 
 void RenderScene(void)
 {
@@ -23,29 +25,37 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
 	// Renderer Test
-	g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
+	g_Renderer->DrawSolidRect(g_Object->GetPos().x, g_Object->GetPos().y, g_Object->GetPos().z, g_Object->GetScale().x, g_Object->GetColor().x, g_Object->GetColor().y, g_Object->GetColor().z, 1.f);
 
 	glutSwapBuffers();
 }
 
 void Idle(void)
 {
+	g_Object->Update();
 	RenderScene();
 }
 
 void MouseInput(int button, int state, int x, int y)
 {
-	RenderScene();
+	x = x - WINDOW_WIDTH / 2;
+	y = -y;
+	y = y + WINDOW_HEIGHT / 2;
+
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+		g_Object->SetPosition(x, y);
+
+	//RenderScene();
 }
 
 void KeyInput(unsigned char key, int x, int y)
 {
-	RenderScene();
+	//RenderScene();
 }
 
 void SpecialKeyInput(int key, int x, int y)
 {
-	RenderScene();
+	//RenderScene();
 }
 
 int main(int argc, char **argv)
@@ -54,7 +64,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutCreateWindow("Game Software Engineering KPU");
 
 	glewInit();
@@ -68,11 +78,12 @@ int main(int argc, char **argv)
 	}
 
 	// Initialize Renderer
-	g_Renderer = new Renderer(500, 500);
+	g_Renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!g_Renderer->IsInitialized())
 	{
 		std::cout << "Renderer could not be initialized.. \n";
 	}
+	g_Object = new GameObject;
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
