@@ -3,7 +3,12 @@
 
 GameObject::GameObject()
 {
-	Initialize();
+	Initialize(MYVECTOR(100.f, 100.f, 0.f), MYVECTOR(5.f, 3.f, 0.f), MYVECTOR(1.f, 1.f, 0.f), 30.f);
+}
+
+GameObject::GameObject(const MYVECTOR& Pos, const MYVECTOR& Speed, const MYVECTOR& Color, const float& Scale)
+{
+	Initialize(Pos, Speed, Color, Scale);
 }
 
 
@@ -11,21 +16,12 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::Initialize()
+void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Speed, const MYVECTOR& Color, const float& Scale)
 {
-	m_vPosition.x = 100.f;
-	m_vPosition.y = 100.f;
-	m_vPosition.z = 0.f;
-
-	m_fScale.x = 30.f;
-	m_fScale.y = 30.f;
-	m_fScale.z = 30.f;
-
-	m_Color.x = 1.f;
-	m_Color.y = 0.f;
-	m_Color.z = 0.f;
-
-	m_Speed = MYVECTOR(5.f, 3.f, 0.f);
+	m_vPosition = Pos;
+	m_fScale = Scale;
+	m_Color = Color;
+	m_Speed = Speed; 
 }
 
 void GameObject::Update()
@@ -48,7 +44,7 @@ MYVECTOR& GameObject::GetPos()
 	return m_vPosition;
 }
 
-MYVECTOR& GameObject::GetScale()
+float& GameObject::GetScale()
 {
 	return m_fScale;
 }
@@ -62,5 +58,37 @@ void GameObject::SetPosition(const float& x, const float& y)
 {
 	m_vPosition.x = x;
 	m_vPosition.y = y;
+}
+
+bool GameObject::checkCrush(GameObject* checkObj)
+{
+	float myMaxX = m_vPosition.x + m_fScale / 2;
+	float myMaxY = m_vPosition.y + m_fScale / 2;
+	float checkMaxX = checkObj->m_vPosition.x + checkObj->m_fScale / 2;
+	float checkMaxY = checkObj->m_vPosition.y + checkObj->m_fScale / 2;
+	float myMinX = m_vPosition.x - m_fScale / 2;
+	float myMinY = m_vPosition.y - m_fScale / 2;
+	float checkMinX = checkObj->m_vPosition.x - checkObj->m_fScale / 2;
+	float checkMinY= checkObj->m_vPosition.y - checkObj->m_fScale / 2;
+
+	if (myMaxX < checkMinX)
+		return false;
+	if (myMinX > checkMaxX)
+		return false;
+	//if (myMaxY < checkMinY)
+	//	return false;
+	//if (myMinY > cehckMaxY)
+	//	return false;
+
+//	{
+//		m_Color = MYVECTOR(1.f, 0.f, 0.f);
+//		checkObj->SetColor(MYVECTOR(1.f, 0.f, 0.f));
+//	}
+//	else
+//	{
+//		m_Color = MYVECTOR(1.f, 1.f, 1.f);
+//		checkObj->SetColor(MYVECTOR(1.f, 1.f, 1.f));
+//	}
+	return true;
 }
 
