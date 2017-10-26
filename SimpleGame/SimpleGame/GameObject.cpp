@@ -22,16 +22,20 @@ void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Speed, const MY
 	m_fScale = Scale;
 	m_Color = Color;
 	m_Speed = Speed; 
+	m_Life = 100.f;
+	m_createTime = timeGetTime() * 0.01f;
 }
 
-void GameObject::Update()
+void GameObject::Update(float elapsedTime)
 {
-	m_vPosition = m_vPosition + m_Speed;
+	m_vPosition = m_vPosition + (m_Speed * elapsedTime * 0.001f);
 
 	if (m_vPosition.x >= WINDOW_WIDTH / 2 || m_vPosition.x <= -WINDOW_WIDTH / 2)
 		m_Speed.x *= -1;
 	if (m_vPosition.y >= WINDOW_HEIGHT / 2 || m_vPosition.y <= -WINDOW_HEIGHT / 2)
 		m_Speed.y *= -1;
+
+	m_Life -= 0.2f;
 }
 
 void GameObject::Render()
@@ -69,26 +73,17 @@ bool GameObject::checkCrush(GameObject* checkObj)
 	float myMinX = m_vPosition.x - m_fScale / 2;
 	float myMinY = m_vPosition.y - m_fScale / 2;
 	float checkMinX = checkObj->m_vPosition.x - checkObj->m_fScale / 2;
-	float checkMinY= checkObj->m_vPosition.y - checkObj->m_fScale / 2;
+	float checkMinY = checkObj->m_vPosition.y - checkObj->m_fScale / 2;
 
 	if (myMaxX < checkMinX)
 		return false;
 	if (myMinX > checkMaxX)
 		return false;
-	//if (myMaxY < checkMinY)
-	//	return false;
-	//if (myMinY > cehckMaxY)
-	//	return false;
+	if (myMaxY < checkMinY)
+		return false;
+	if (myMinY > checkMaxY)
+		return false;
 
-//	{
-//		m_Color = MYVECTOR(1.f, 0.f, 0.f);
-//		checkObj->SetColor(MYVECTOR(1.f, 0.f, 0.f));
-//	}
-//	else
-//	{
-//		m_Color = MYVECTOR(1.f, 1.f, 1.f);
-//		checkObj->SetColor(MYVECTOR(1.f, 1.f, 1.f));
-//	}
 	return true;
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_OBJECTS_COUNT 2
+#define MAX_OBJECTS_COUNT 10
 
 class GameObject;
 class Renderer;
@@ -11,7 +11,8 @@ public:
 	SceneMgr();
 	virtual ~SceneMgr();
 
-	void Update();
+	void CreateObject(float x, float y);
+	void Update(float frameTime);
 	void Render();
 
 private:

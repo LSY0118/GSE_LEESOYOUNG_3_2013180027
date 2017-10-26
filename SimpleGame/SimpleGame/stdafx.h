@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <cmath>
+#include <Windows.h>
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -31,6 +32,10 @@ typedef struct myVector
 	myVector operator +(const myVector& r1)
 	{
 		return myVector(x + r1.x, y + r1.y, z + r1.z);
+	}
+	myVector operator *(const float& num)
+	{
+		return myVector(x * num, y * num, z * num);
 	}
 	void Normalize()
 	{

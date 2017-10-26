@@ -15,11 +15,13 @@ public:
 	MYVECTOR& GetPos();
 	float& GetScale();
 	MYVECTOR& GetColor();
+	float& GetLife() { return m_Life; }
 
 	void Render();
-	void Update();
+	void Update(float nowTime);
 	void SetPosition(const float& x, const float& y);
 	bool checkCrush(GameObject* checkObj);
+	//void DeleteObj();
 
 	void SetColor(MYVECTOR& Color) { m_Color = Color; }
 	
@@ -31,5 +33,8 @@ private:
 	float m_fScale;
 	MYVECTOR m_Color;
 	MYVECTOR m_Speed;
+
+	float m_createTime;
+	float m_Life;
 };
 

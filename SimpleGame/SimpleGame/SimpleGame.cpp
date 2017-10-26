@@ -16,6 +16,7 @@ but WITHOUT ANY WARRANTY.
 #include "SceneMgr.h"
 
 SceneMgr* g_SceneMgr;
+float prevTime = 0.f;
 
 void RenderScene(void)
 {
@@ -23,6 +24,11 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
 	// Renderer Test
+	DWORD curTime = timeGetTime();
+	DWORD elapsedTime = curTime - prevTime;
+	prevTime = curTime;
+
+	g_SceneMgr->Update((float)elapsedTime);
 	g_SceneMgr->Render();
 
 	glutSwapBuffers();
@@ -30,15 +36,19 @@ void RenderScene(void)
 
 void Idle(void)
 {
-	g_SceneMgr->Update();
 	RenderScene();
 }
 
 void MouseInput(int button, int state, int x, int y)
 {
-	x = x - WINDOW_WIDTH / 2;
-	y = -y;
-	y = y + WINDOW_HEIGHT / 2;
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		float fX = x - WINDOW_WIDTH / 2.f;
+		float fY = float(-y);
+		fY = fY + WINDOW_HEIGHT / 2.f;
+
+		g_SceneMgr->CreateObject(fX, fY);
+	}
 
 	RenderScene();
 }
