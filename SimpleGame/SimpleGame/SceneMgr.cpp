@@ -131,6 +131,37 @@ void SceneMgr::Update(float frameTime)
 	}
 
 	CrushCheck();
+
+	for (int i = 0; i < MAX_BUILD_COUNT; ++i)
+	{
+		
+		if (m_BlueBuilding[i] && m_BlueBuilding[i]->GetLife() < 0.f)
+		{
+			delete m_BlueBuilding[i];
+			m_BlueBuilding[i] = NULL;
+		}
+
+		if (m_RedBuilding[i] && m_RedBuilding[i]->GetLife() < 0.f)
+		{
+			delete m_RedBuilding[i];
+			m_RedBuilding[i] = NULL;
+		}
+	}
+
+	for (int i = 0; i < MAX_ARR_COUNT; ++i)
+	{
+		if (m_BlueObj[i] && m_BlueObj[i]->GetLife() < 0.f)
+		{
+			delete m_BlueObj[i];
+			m_BlueObj[i] = NULL;
+		}
+
+		if (m_RedObj[i] && m_RedObj[i]->GetLife() < 0.f)
+		{
+			delete m_RedObj[i];
+			m_RedObj[i] = NULL;
+		}
+	}
 }
 
 void SceneMgr::Render()
@@ -173,21 +204,35 @@ void SceneMgr::CreateBullet()
 	bool red = false;
 	for (int i = 0; i < MAX_BUILD_COUNT; ++i)
 	{
-		for (int i = 0; i < MAX_ARR_COUNT; ++i)
+		for (int j = 0; j < MAX_ARR_COUNT; ++j)
 		{
-			if (blue == false && m_BlueObj[i] == NULL)
+			if (blue == false && m_BlueObj[j] == NULL)
 			{
-				MYVECTOR dir = MYVECTOR(float(rand() % 5 - 5), 10.f, 0.f);
-				dir.Normalize();
-				m_BlueObj[i] = new GameObject(MYVECTOR(m_BlueBuilding[i]->GetPos()), dir, MYVECTOR(0.f, 0.f, 1.f), 4.f, OBJECT_BULLET, OBJECT_TEAM_BLUE);
-				blue = true;
+				if (m_BlueBuilding[i])
+				{
+					MYVECTOR dir = MYVECTOR(float(rand() % 5 - 5), 10.f, 0.f);
+					dir.Normalize();
+					m_BlueObj[j] = new GameObject(MYVECTOR(m_BlueBuilding[i]->GetPos()), dir, MYVECTOR(0.f, 0.f, 1.f), 4.f, OBJECT_BULLET, OBJECT_TEAM_BLUE);
+					blue = true;
+				}
+				else
+				{
+					blue = true;
+				}
 			}
-			if (red == false && m_RedObj[i] == NULL)
+			if (red == false && m_RedObj[j] == NULL)
 			{
-				MYVECTOR dir = MYVECTOR(float(rand() % 5 - 5), -10.f, 0.f);
-				dir.Normalize();
-				m_RedObj[i] = new GameObject(MYVECTOR(m_RedBuilding[i]->GetPos()), dir, MYVECTOR(1.f, 0.f, 0.f), 4.f, OBJECT_BULLET, OBJECT_TEAM_RED);
-				red = true;
+				if (m_RedBuilding[i])
+				{
+					MYVECTOR dir = MYVECTOR(float(rand() % 5 - 5), -10.f, 0.f);
+					dir.Normalize();
+					m_RedObj[j] = new GameObject(MYVECTOR(m_RedBuilding[i]->GetPos()), dir, MYVECTOR(1.f, 0.f, 0.f), 4.f, OBJECT_BULLET, OBJECT_TEAM_RED);
+					red = true;
+				}
+				else
+				{
+					red = true;
+				}
 			}
 
 			if (blue && red)
@@ -209,7 +254,6 @@ void SceneMgr::CreateRedChar()
 			int x = WINDOW_WIDTH / 2;
 			int y = WINDOW_HEIGHT / 2 - 100.f;
 			MYVECTOR pos = MYVECTOR(float(rand() % x - x), float(rand() % y + 100.f), 0.f);
-			cout << pos.x << " " << pos.y << endl;
 			MYVECTOR dir = MYVECTOR(float(rand() % 5 - 5), -10.f, 0.f);
 			dir.Normalize();
 			m_RedObj[i] = new GameObject(pos, dir, MYVECTOR(1.f, 0.f, 0.f), 20.f, OBJECT_CHAR, OBJECT_TEAM_RED);
@@ -231,8 +275,7 @@ void SceneMgr::CreateBlueChar(float x, float y)
 			MYVECTOR dir = MYVECTOR(float(rand() % 5 - 5), 10.f, 0.f);
 			dir.Normalize();
 			m_BlueObj[i] = new GameObject(MYVECTOR(x, y, 0.f), dir, MYVECTOR(0.f, 0.f, 1.f), 20.f, OBJECT_CHAR, OBJECT_TEAM_BLUE);
-			cout << x << " " << y << endl;
-
+		
 			m_createCharBlueTime = timeGetTime() * 0.001f;
 			BlueCharCoolDown = true;
 
@@ -277,83 +320,54 @@ void SceneMgr::CreateArrow()
 
 void SceneMgr::CrushCheck()
 {
-	//for (int i = 0; i < MAX_ARR_COUNT; ++i)
-	//{
-	//	for (int j = i; j < MAX_ARR_COUNT; ++i)
-	//	{
-	//	}
+	for (int i = 0; i < MAX_ARR_COUNT; ++i)
+	{
+		for (int j = 0; j < MAX_ARR_COUNT; ++j)
+		{
+			if (m_BlueObj[i] && m_RedObj[j])
+			{
+				if (!(m_BlueObj[i]->GetObjType() == OBJECT_CHAR && m_RedObj[j]->GetObjType() == OBJECT_CHAR))
+				{
+					if (m_BlueObj[i]->checkCrush(m_RedObj[j]))
+					{
+						float iHp, jHp;
+						iHp = m_BlueObj[i]->GetLife();
+						jHp = m_RedObj[j]->GetLife();
 
-	//	for (int k = 0; k < MAX_BUILD_COUNT; ++k)
-	//	{
-	//	}
-	//}
-	
-	//for (int i = 0; i < MAX_PLAYER_COUNT; ++i)
-	//{
-	//	if (m_PlayerObj[i])
-	//	{
-	//		for (int j = 0; j < MAX_BUL_ARR_COUNT; ++j)
-	//		{
-	//			if (m_BulletObj[j])
-	//			{
-	//				if (m_PlayerObj[i]->checkCrush(m_BulletObj[j]))
-	//				{
-	//					m_PlayerObj[i]->DecreaseHP(m_BulletObj[j]->GetLife());
+						m_BlueObj[i]->DecreaseHP(jHp);
+						m_RedObj[j]->DecreaseHP(iHp);
+					}
+				}
+			}
+		}
 
-	//					delete m_BulletObj[j];
-	//					m_BulletObj[j] = NULL;
-	//				}
-	//			}
+		for (int k = 0; k < MAX_BUILD_COUNT; ++k)
+		{
+			if (m_BlueObj[i] && m_RedBuilding[k])
+			{
+				if (m_BlueObj[i]->checkCrush(m_RedBuilding[k]))
+				{
+					float iHp, kHp;
+					iHp = m_BlueObj[i]->GetLife();
+					kHp = m_RedBuilding[k]->GetLife();
+					
+					m_BlueObj[i]->DecreaseHP(kHp);
+					m_RedBuilding[k]->DecreaseHP(iHp);
+				}
+			}
 
-	//			//if (m_ArrowObj[j])
-	//			//{
-	//			//	if (m_PlayerObj[i]->checkCrush(m_ArrowObj[j]))
-	//			//	{
-	//			//		m_PlayerObj[i]->DecreaseHP(m_ArrowObj[j]->GetLife());
+			if (m_RedObj[i] && m_BlueBuilding[k])
+			{
+				if (m_RedObj[i]->checkCrush(m_BlueBuilding[k]))
+				{
+					float iHp, kHp;
+					iHp = m_RedObj[i]->GetLife();
+					kHp = m_BlueBuilding[k]->GetLife();
 
-	//			//		delete m_ArrowObj[j];
-	//			//		m_ArrowObj[j] = NULL;
-	//			//	}
-	//			//}
-	//		}
-
-	//		if (m_BuildingObj)
-	//		{
-	//			if (m_PlayerObj[i]->checkCrush(m_BuildingObj))
-	//			{
-	//				m_BuildingObj->DecreaseHP(m_PlayerObj[i]->GetLife());
-	//				m_PlayerObj[i]->DecreaseHP(m_BuildingObj->GetLife());
-	//			}
-	//		}
-
-	//		if (m_PlayerObj[i]->GetLife() <= 0.f)
-	//		{
-	//			delete m_PlayerObj[i];
-	//			m_PlayerObj[i] = NULL;
-	//		}
-	//	}
-	//}
-
-	//for (int j = 0; j < MAX_BUL_ARR_COUNT; ++j)
-	//{
-	//	if (m_ArrowObj[j] && m_BuildingObj)
-	//	{
-	//		if (m_ArrowObj[j]->checkCrush(m_BuildingObj))
-	//		{
-	//			m_BuildingObj->DecreaseHP(m_ArrowObj[j]->GetLife());
-
-	//			delete m_ArrowObj[j];
-	//			m_ArrowObj[j] = NULL;
-	//		}
-	//	}
-	//}
-
-	//if (m_BuildingObj)
-	//{
-	//	if (m_BuildingObj->GetLife() <= 0.f)
-	//	{
-	//		delete m_BuildingObj;
-	//		m_BuildingObj = NULL;
-	//	}
-	//}
+					m_RedObj[i]->DecreaseHP(kHp);
+					m_BlueBuilding[k]->DecreaseHP(iHp);
+				}
+			}
+		}
+	}
 }

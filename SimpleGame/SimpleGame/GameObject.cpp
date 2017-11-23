@@ -54,9 +54,23 @@ void GameObject::Update(float elapsedTime)
 	m_vPosition = m_vPosition + (m_Direction * elapsedTime * 0.001f) * m_Speed;
 
 	if (m_vPosition.x + m_fScale >= WINDOW_WIDTH / 2 || m_vPosition.x - m_fScale <= -WINDOW_WIDTH / 2)
-		m_Direction.x *= -1.f;
+	{
+		if (m_myType == OBJECT_ARROW || m_myType == OBJECT_BULLET)
+		{
+			m_Life = -1.f;
+		}
+		else
+			m_Direction.x *= -1.f;
+	}
 	if (m_vPosition.y + m_fScale >= WINDOW_HEIGHT / 2 || m_vPosition.y - m_fScale <= -WINDOW_HEIGHT / 2)
-		m_Direction.y *= -1.f;
+	{
+		if (m_myType == OBJECT_ARROW || m_myType == OBJECT_BULLET)
+		{
+			m_Life = -1.f;
+		}
+		else
+			m_Direction.y *= -1.f;
+	}
 }
 
 void GameObject::Render()
