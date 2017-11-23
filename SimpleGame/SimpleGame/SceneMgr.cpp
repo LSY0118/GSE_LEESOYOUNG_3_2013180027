@@ -254,6 +254,7 @@ void SceneMgr::CreateArrow()
 					MYVECTOR dir = MYVECTOR(float(rand() % 5 - 5), 10.f, 0.f);
 					dir.Normalize();
 					m_RedObj[j] = new GameObject(m_RedObj[i]->GetPos(), dir, MYVECTOR(1.f, 1.f, 0.f), 4.f, OBJECT_ARROW, OBJECT_TEAM_RED);
+					break;
 				}
 			}
 		}
@@ -267,6 +268,7 @@ void SceneMgr::CreateArrow()
 					MYVECTOR dir = MYVECTOR(float(rand() % 5 - 5), 10.f, 0.f);
 					dir.Normalize();
 					m_BlueObj[j] = new GameObject(m_BlueObj[i]->GetPos(), dir, MYVECTOR(0.f, 1.f, 1.f), 4.f, OBJECT_ARROW, OBJECT_TEAM_BLUE);
+					break;
 				}
 			}
 		}
@@ -275,16 +277,16 @@ void SceneMgr::CreateArrow()
 
 void SceneMgr::CrushCheck()
 {
-	for (int i = 0; i < MAX_ARR_COUNT; ++i)
-	{
-		for (int j = i; j < MAX_ARR_COUNT; ++i)
-		{
-		}
+	//for (int i = 0; i < MAX_ARR_COUNT; ++i)
+	//{
+	//	for (int j = i; j < MAX_ARR_COUNT; ++i)
+	//	{
+	//	}
 
-		for (int k = 0; k < MAX_BUILD_COUNT; ++k)
-		{
-		}
-	}
+	//	for (int k = 0; k < MAX_BUILD_COUNT; ++k)
+	//	{
+	//	}
+	//}
 	
 	//for (int i = 0; i < MAX_PLAYER_COUNT; ++i)
 	//{
