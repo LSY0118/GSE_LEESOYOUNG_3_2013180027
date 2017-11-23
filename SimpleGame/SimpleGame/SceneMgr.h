@@ -2,10 +2,10 @@
 
 #include "Dependencies\glew.h"
 
-#define MAX_BUL_ARR_COUNT 100
-#define MAX_PLAYER_COUNT 10
+#define MAX_ARR_COUNT 100
+#define MAX_BUILD_COUNT 3
 
-enum OBJECT_TYPE {OBJECT_BUILDING, OBJECT_CHARACTER, OBJECT_BULLET, OBJECT_ARROW};
+enum OBJECT_TYPE {OBJECT_TEAM_RED, OBJECT_TEAM_BLUE, OBJECT_BUILDING, OBJECT_CHAR, OBJECT_BULLET, OBJECT_ARROW};
 
 class GameObject;
 class Renderer;
@@ -16,7 +16,10 @@ public:
 	SceneMgr();
 	virtual ~SceneMgr();
 
-	void CreateObject(float x, float y);
+	void CreateBullet();
+	void CreateRedChar();
+	void CreateBlueChar(float x, float y);
+	void CreateArrow();
 	void Update(float frameTime);
 	void Render();
 	
@@ -24,14 +27,20 @@ public:
 
 private:
 	Renderer* m_Renderer;
-	GameObject* m_BuildingObj;
-	GameObject* m_PlayerObj[MAX_PLAYER_COUNT];
-	GameObject* m_ArrowObj[MAX_BUL_ARR_COUNT];
-	GameObject* m_BulletObj[MAX_BUL_ARR_COUNT];
+	GameObject* m_RedBuilding[MAX_BUILD_COUNT];
+	GameObject* m_BlueBuilding[MAX_BUILD_COUNT];
+	GameObject* m_RedObj[MAX_ARR_COUNT];
+	GameObject* m_BlueObj[MAX_ARR_COUNT];
 
-	GLuint m_BuildingTexID;
+	GLuint m_RedTexID;
+	GLuint m_BlueTexID;
 	void Initialize();
 
 	float m_createBulletTime;
+	float m_createCharRedTime;
+	float m_createCharBlueTime;
+	float m_createArrowTime;
+
+	bool BlueCharCoolDown;
 };
 

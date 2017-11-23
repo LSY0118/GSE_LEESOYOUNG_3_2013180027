@@ -6,9 +6,10 @@ GameObject::GameObject()
 	Initialize(MYVECTOR(100.f, 100.f, 0.f), MYVECTOR(5.f, 3.f, 0.f), MYVECTOR(1.f, 1.f, 0.f), 30.f);
 }
 
-GameObject::GameObject(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVECTOR& Color, const float& Scale, OBJECT_TYPE myType)
+GameObject::GameObject(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVECTOR& Color, const float& Scale, OBJECT_TYPE myType, OBJECT_TYPE myTeam)
 {
 	m_myType = myType;
+	m_myTeam = myTeam;
 	Initialize(Pos, Dir, Color, Scale);
 }
 
@@ -28,25 +29,21 @@ void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVE
 	{
 		m_Life = 500;
 		m_Speed = 0;
-		m_Action = true;
 	}
-	if (m_myType == OBJECT_CHARACTER)
+	if (m_myType == OBJECT_CHAR)
 	{
 		m_Life = 100;
 		m_Speed = 300;
-		m_Action = true;
 	}
 	if (m_myType == OBJECT_BULLET)
 	{
 		m_Life = 20;
 		m_Speed = 600;
-		m_Action = true;
 	}
 	if (m_myType == OBJECT_ARROW)
 	{
 		m_Life = 10;
 		m_Speed = 100;
-		m_Action = false;
 	}
 
 	m_createTime = timeGetTime() * 0.001f;
@@ -54,18 +51,12 @@ void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVE
 
 void GameObject::Update(float elapsedTime)
 {
-	float curTime = timeGetTime() * 0.001f;
-	if (curTime - m_createTime >= 3.f && m_myType == OBJECT_ARROW && m_Action == false)
-	{
-		m_Action = true;
-	}
-
 	m_vPosition = m_vPosition + (m_Direction * elapsedTime * 0.001f) * m_Speed;
 
-	if (m_vPosition.x >= WINDOW_WIDTH / 2 || m_vPosition.x <= -WINDOW_WIDTH / 2)
-		m_Direction.x *= -1;
-	if (m_vPosition.y >= WINDOW_HEIGHT / 2 || m_vPosition.y <= -WINDOW_HEIGHT / 2)
-		m_Direction.y *= -1;
+	if (m_vPosition.x + m_fScale >= WINDOW_WIDTH / 2 || m_vPosition.x - m_fScale <= -WINDOW_WIDTH / 2)
+		m_Direction.x *= -1.f;
+	if (m_vPosition.y + m_fScale >= WINDOW_HEIGHT / 2 || m_vPosition.y - m_fScale <= -WINDOW_HEIGHT / 2)
+		m_Direction.y *= -1.f;
 }
 
 void GameObject::Render()
@@ -96,9 +87,6 @@ void GameObject::SetPosition(const float& x, const float& y)
 
 bool GameObject::checkCrush(GameObject* checkObj)
 {
-	if (!m_Action)
-		return false;
-
 	float myMaxX = m_vPosition.x + m_fScale / 2;
 	float myMaxY = m_vPosition.y + m_fScale / 2;
 	float checkMaxX = checkObj->m_vPosition.x + checkObj->m_fScale / 2;

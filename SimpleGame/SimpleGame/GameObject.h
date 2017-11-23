@@ -10,7 +10,7 @@ class GameObject
 {
 public:
 	GameObject();
-	GameObject(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVECTOR& Color, const float& Scale, OBJECT_TYPE myType);
+	GameObject(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVECTOR& Color, const float& Scale, OBJECT_TYPE myType, OBJECT_TYPE myTeam);
 	virtual ~GameObject();
 
 	MYVECTOR& GetPos();
@@ -42,8 +42,6 @@ protected:
 	float m_Life;
 	float m_Speed;
 
-	bool m_Action;
-	float m_ActionTime;
-
 	OBJECT_TYPE m_myType;
+	OBJECT_TYPE m_myTeam;
 };

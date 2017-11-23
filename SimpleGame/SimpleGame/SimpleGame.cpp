@@ -24,8 +24,8 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
 	// Renderer Test
-	DWORD curTime = timeGetTime();
-	DWORD elapsedTime = curTime - prevTime;
+	float curTime = (float)timeGetTime();
+	float elapsedTime = curTime - prevTime;
 	prevTime = curTime;
 
 	g_SceneMgr->Update((float)elapsedTime);
@@ -47,7 +47,7 @@ void MouseInput(int button, int state, int x, int y)
 		float fY = float(-y);
 		fY = fY + WINDOW_HEIGHT / 2.f;
 
-		g_SceneMgr->CreateObject(fX, fY);
+		g_SceneMgr->CreateBlueChar(fX, fY);
 	}
 
 	RenderScene();
