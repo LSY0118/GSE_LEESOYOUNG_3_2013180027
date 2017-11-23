@@ -29,21 +29,25 @@ void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVE
 	{
 		m_Life = 500;
 		m_Speed = 0;
+		m_myDepthLevel = DEPTH_BUILDING;
 	}
 	if (m_myType == OBJECT_CHAR)
 	{
 		m_Life = 100;
 		m_Speed = 300;
+		m_myDepthLevel = DEPTH_CHAR;
 	}
 	if (m_myType == OBJECT_BULLET)
 	{
-		m_Life = 20;
+		m_Life = 15;
 		m_Speed = 600;
+		m_myDepthLevel = DEPTH_ARR_BUL;
 	}
 	if (m_myType == OBJECT_ARROW)
 	{
 		m_Life = 10;
 		m_Speed = 100;
+		m_myDepthLevel = DEPTH_ARR_BUL;
 	}
 
 	m_createTime = timeGetTime() * 0.001f;

@@ -17,6 +17,7 @@ public:
 	float& GetScale();
 	MYVECTOR& GetColor();
 	float& GetLife() { return m_Life; }
+	float& GetDepthLevel() { return m_myDepthLevel; }
 	OBJECT_TYPE& GetObjType() { return m_myType; }
 
 	void Render();
@@ -41,6 +42,8 @@ protected:
 	float m_createTime;
 	float m_Life;
 	float m_Speed;
+	
+	float m_myDepthLevel;
 
 	OBJECT_TYPE m_myType;
 	OBJECT_TYPE m_myTeam;
