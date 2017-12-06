@@ -24,6 +24,7 @@ void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVE
 	m_fScale = Scale;
 	m_Color = Color;
 	m_Direction = Dir;
+	m_AniLevel = 0;
 
 	if (m_myType == OBJECT_BUILDING)
 	{
@@ -50,11 +51,23 @@ void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVE
 		m_myDepthLevel = DEPTH_ARR_BUL;
 	}
 
-	m_createTime = timeGetTime() * 0.001f;
+	m_maxLife = m_Life;
+	m_AniTime = timeGetTime() * 0.001f;
 }
 
 void GameObject::Update(float elapsedTime)
 {
+	float curTime = timeGetTime() * 0.001f;
+
+	if (curTime - m_AniTime >= 0.3f)
+	{
+		m_AniLevel += 1;
+		if (m_AniLevel > 3)
+			m_AniLevel = 0;
+
+		m_AniTime = curTime;
+	}
+	
 	m_vPosition = m_vPosition + (m_Direction * elapsedTime * 0.001f) * m_Speed;
 
 	if (m_vPosition.x + m_fScale >= WINDOW_WIDTH / 2 || m_vPosition.x - m_fScale <= -WINDOW_WIDTH / 2)

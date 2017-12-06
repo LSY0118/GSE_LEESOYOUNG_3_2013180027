@@ -16,8 +16,11 @@ public:
 	MYVECTOR& GetPos();
 	float& GetScale();
 	MYVECTOR& GetColor();
+	MYVECTOR& GetDir() { return m_Direction; }
 	float& GetLife() { return m_Life; }
+	float& GetMaxLife() { return m_maxLife; }
 	float& GetDepthLevel() { return m_myDepthLevel; }
+	int& GetAniLevel() { return m_AniLevel;	}
 	OBJECT_TYPE& GetObjType() { return m_myType; }
 
 	void Render();
@@ -39,12 +42,15 @@ protected:
 	MYVECTOR m_Color;
 	MYVECTOR m_Direction;
 
-	float m_createTime;
+	float m_AniTime;
 	float m_Life;
 	float m_Speed;
 	
 	float m_myDepthLevel;
+	int m_AniLevel;
 
 	OBJECT_TYPE m_myType;
 	OBJECT_TYPE m_myTeam;
+
+	float m_maxLife;
 };
