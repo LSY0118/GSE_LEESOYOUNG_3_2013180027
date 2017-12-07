@@ -20,6 +20,7 @@ enum OBJECT_TYPE {OBJECT_TEAM_RED, OBJECT_TEAM_BLUE, OBJECT_BUILDING, OBJECT_CHA
 
 class GameObject;
 class Renderer;
+class Sound;
 
 class SceneMgr
 {
@@ -31,13 +32,14 @@ public:
 	void CreateRedChar();
 	void CreateBlueChar(float x, float y);
 	void CreateArrow();
-	void Update(float frameTime);
+	void Update(float elapsedTime);
 	void Render();
 	
 	void CrushCheck();
 
 private:
 	Renderer* m_Renderer;
+	Sound* m_Sound;
 	GameObject* m_RedBuilding[MAX_BUILD_COUNT];
 	GameObject* m_BlueBuilding[MAX_BUILD_COUNT];
 	GameObject* m_RedObj[MAX_ARR_COUNT];

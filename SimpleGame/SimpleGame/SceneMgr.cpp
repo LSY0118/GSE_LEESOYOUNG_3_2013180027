@@ -2,6 +2,7 @@
 #include "SceneMgr.h"
 
 #include "Renderer.h"
+#include "Sound.h"
 #include "GameObject.h"
 
 using namespace std;
@@ -16,6 +17,9 @@ SceneMgr::~SceneMgr()
 {
 	delete m_Renderer;
 	m_Renderer = NULL;
+
+	delete m_Sound;
+	m_Sound = NULL;
 
 	for (int i = 0; i < MAX_BUILD_COUNT; ++i)
 	{
@@ -67,6 +71,9 @@ void SceneMgr::Initialize()
 	m_BlueBulletTexID = m_Renderer->CreatePngTexture("Resource/bluebullet.png");
 	m_RedBulletTexID = m_Renderer->CreatePngTexture("Resource/redbullet.png");
 
+	m_Sound = new Sound();
+	GLuint m_soundBG = m_Sound->CreateSound("Dependencies/SoundSamples/MF-W-90.XM");
+
 	m_BlueBuilding[0] = new GameObject(MYVECTOR(0.f, -WINDOW_HEIGHT / 2 + 100.f, 0.f), MYVECTOR(0.f, 0.f, 0.f), MYVECTOR(1.f, 1.f, 1.f), 100.f, OBJECT_BUILDING, OBJECT_TEAM_RED);
 	m_BlueBuilding[1] = new GameObject(MYVECTOR(-WINDOW_WIDTH / 4, -WINDOW_HEIGHT / 2 + 75.f, 0.f), MYVECTOR(0.f, 0.f, 0.f), MYVECTOR(1.f, 1.f, 1.f), 100.f, OBJECT_BUILDING, OBJECT_TEAM_RED);
 	m_BlueBuilding[2] = new GameObject(MYVECTOR(WINDOW_WIDTH / 4, -WINDOW_HEIGHT / 2 + 75.f, 0.f), MYVECTOR(0.f, 0.f, 0.f), MYVECTOR(1.f, 1.f, 1.f), 100.f, OBJECT_BUILDING, OBJECT_TEAM_RED);
@@ -81,19 +88,21 @@ void SceneMgr::Initialize()
 	m_createCharBlueTime = timeGetTime() * 0.001f;
 	m_createCharRedTime = timeGetTime() * 0.001f;
 	m_createArrowTime = timeGetTime() * 0.001f;
+
+	m_Sound->PlaySound(m_soundBG, true, 0.5f);
 }
 
-void SceneMgr::Update(float frameTime)
+void SceneMgr::Update(float elapsedTime)
 {
 	float curTime = timeGetTime() * 0.001f;
 
-	if (curTime - m_createBulletTime >= 7.f)
+	if (curTime - m_createBulletTime >= 5.f)
 	{
 		CreateBullet();
 		m_createBulletTime = curTime;
 	}
 
-	if (curTime - m_createCharRedTime >= 5.f)
+	if (curTime - m_createCharRedTime >= 3.f)
 	{
 		CreateRedChar();
 		m_createCharRedTime = curTime;
@@ -104,7 +113,7 @@ void SceneMgr::Update(float frameTime)
 		BlueCharCoolDown = false;
 	}
 
-	if (curTime - m_createArrowTime >= 1.f)
+	if (curTime - m_createArrowTime >= 0.5f)
 	{
 		CreateArrow();
 		m_createArrowTime = curTime;
@@ -114,12 +123,12 @@ void SceneMgr::Update(float frameTime)
 	{
 		if (m_BlueBuilding[i])
 		{
-			m_BlueBuilding[i]->Update(frameTime);
+			m_BlueBuilding[i]->Update(elapsedTime);
 		}
 
 		if (m_RedBuilding[i])
 		{
-			m_RedBuilding[i]->Update(frameTime);
+			m_RedBuilding[i]->Update(elapsedTime);
 		}
 	}
 
@@ -127,11 +136,11 @@ void SceneMgr::Update(float frameTime)
 	{
 		if (m_BlueObj[i])
 		{
-			m_BlueObj[i]->Update(frameTime);
+			m_BlueObj[i]->Update(elapsedTime);
 		}
 		if (m_RedObj[i])
 		{
-			m_RedObj[i]->Update(frameTime);
+			m_RedObj[i]->Update(elapsedTime);
 		}
 	}
 
@@ -245,6 +254,9 @@ void SceneMgr::Render()
 			}
 		}
 	}
+
+	char text[10] = "Text\nTest";
+	m_Renderer->DrawText(-WINDOW_WIDTH / 2 + 10, WINDOW_HEIGHT / 2 - 25, GLUT_BITMAP_HELVETICA_18, 0.f, 0.f, 0.f, text);
 }
 
 void SceneMgr::CreateBullet()
