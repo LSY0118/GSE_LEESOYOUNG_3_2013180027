@@ -41,7 +41,7 @@ void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVE
 	if (m_myType == OBJECT_BULLET)
 	{
 		m_Life = 15;
-		m_Speed = 600;
+		m_Speed = 100;
 		m_myDepthLevel = DEPTH_ARR_BUL;
 	}
 	if (m_myType == OBJECT_ARROW)
@@ -53,11 +53,17 @@ void GameObject::Initialize(const MYVECTOR& Pos, const MYVECTOR& Dir, const MYVE
 
 	m_maxLife = m_Life;
 	m_AniTime = timeGetTime() * 0.001f;
+
+	m_ParticleTime = 0.f;
 }
 
 void GameObject::Update(float elapsedTime)
 {
 	float curTime = timeGetTime() * 0.001f;
+	
+	m_ParticleTime += (elapsedTime * 0.001f);
+	if (m_ParticleTime >= 0.5f)
+		m_ParticleTime -= 0.1f;
 
 	if (curTime - m_AniTime >= 0.3f)
 	{

@@ -62,6 +62,8 @@ SceneMgr::~SceneMgr()
 
 void SceneMgr::Initialize()
 {
+	climatetime = 0.f;
+
 	m_Renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 	m_RedTexID = m_Renderer->CreatePngTexture("Resource/RedBuild.png");
 	m_BlueTexID = m_Renderer->CreatePngTexture("Resource/BlueBuild.png");
@@ -70,6 +72,7 @@ void SceneMgr::Initialize()
 	m_BlueCharTexID = m_Renderer->CreatePngTexture("Resource/BlueChar.png");
 	m_BlueBulletTexID = m_Renderer->CreatePngTexture("Resource/bluebullet.png");
 	m_RedBulletTexID = m_Renderer->CreatePngTexture("Resource/redbullet.png");
+	m_texClimate = m_Renderer->CreatePngTexture("Resource/snow.png");
 
 	m_Sound = new Sound();
 	GLuint m_soundBG = m_Sound->CreateSound("Dependencies/SoundSamples/MF-W-90.XM");
@@ -94,9 +97,11 @@ void SceneMgr::Initialize()
 
 void SceneMgr::Update(float elapsedTime)
 {
+	climatetime += (elapsedTime * 0.001f);
+
 	float curTime = timeGetTime() * 0.001f;
 
-	if (curTime - m_createBulletTime >= 5.f)
+	if (curTime - m_createBulletTime >= 1.5f)
 	{
 		CreateBullet();
 		m_createBulletTime = curTime;
@@ -221,7 +226,7 @@ void SceneMgr::Render()
 			{
 				m_Renderer->DrawParticle(m_BlueObj[i]->GetPos().x, m_BlueObj[i]->GetPos().y, m_BlueObj[i]->GetPos().z,
 					m_BlueObj[i]->GetScale(), m_BlueObj[i]->GetColor().x, m_BlueObj[i]->GetColor().y, m_BlueObj[i]->GetColor().z, 1.f, -m_BlueObj[i]->GetDir().x, -m_BlueObj[i]->GetDir().y,
-					m_BlueBulletTexID, timeGetTime() * 0.001f);
+					m_BlueBulletTexID, m_BlueObj[i]->GetParticleTime(), DEPTH_ARR_BUL);
 			}
 			else
 			{
@@ -244,7 +249,7 @@ void SceneMgr::Render()
 			{
 				m_Renderer->DrawParticle(m_RedObj[i]->GetPos().x, m_RedObj[i]->GetPos().y, m_RedObj[i]->GetPos().z,
 					m_RedObj[i]->GetScale(), m_RedObj[i]->GetColor().x, m_RedObj[i]->GetColor().y, m_RedObj[i]->GetColor().z, 1.f, -m_RedObj[i]->GetDir().x, -m_RedObj[i]->GetDir().y,
-					m_RedBulletTexID, timeGetTime() * 0.001f);
+					m_RedBulletTexID, m_RedObj[i]->GetParticleTime(), DEPTH_ARR_BUL);
 			}
 			else
 			{
@@ -254,6 +259,8 @@ void SceneMgr::Render()
 			}
 		}
 	}
+	
+	m_Renderer->DrawParticleClimate(0, 0, 0, 1, 1, 1, 1, 1, -0.1, -0.1, m_texClimate, climatetime, DEPTH_CLIMATE);
 
 	char text[10] = "Text\nTest";
 	m_Renderer->DrawText(-WINDOW_WIDTH / 2 + 10, WINDOW_HEIGHT / 2 - 25, GLUT_BITMAP_HELVETICA_18, 0.f, 0.f, 0.f, text);

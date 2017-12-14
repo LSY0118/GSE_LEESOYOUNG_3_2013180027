@@ -10,9 +10,10 @@
 enum OBJECT_TYPE {OBJECT_TEAM_RED, OBJECT_TEAM_BLUE, OBJECT_BUILDING, OBJECT_CHAR, OBJECT_BULLET, OBJECT_ARROW};
 
 #define DEPTH_BACKGROUND 0.9
-#define DEPTH_BUILDING 0.1
-#define DEPTH_CHAR 0.2
-#define DEPTH_ARR_BUL 0.3
+#define DEPTH_CLIMATE 0.1
+#define DEPTH_BUILDING 0.2
+#define DEPTH_CHAR 0.3
+#define DEPTH_ARR_BUL 0.4
 
 #define BUILDING_GAUGE 100.f
 #define CHAR_GAUGE 30.f
@@ -52,13 +53,15 @@ private:
 	GLuint m_BlueCharTexID;
 	GLuint m_RedBulletTexID; 
 	GLuint m_BlueBulletTexID;
-
+	GLuint m_texClimate;
+		
 	void Initialize();
 
 	float m_createBulletTime;
 	float m_createCharRedTime;
 	float m_createCharBlueTime;
 	float m_createArrowTime;
+	float climatetime;
 
 	bool BlueCharCoolDown;
 };

@@ -22,6 +22,7 @@ public:
 	float& GetDepthLevel() { return m_myDepthLevel; }
 	int& GetAniLevel() { return m_AniLevel;	}
 	OBJECT_TYPE& GetObjType() { return m_myType; }
+	float& GetParticleTime() { return m_ParticleTime; }
 
 	void Render();
 	void Update(float nowTime);
@@ -46,6 +47,7 @@ protected:
 	float m_Life;
 	float m_Speed;
 	
+	float m_ParticleTime;
 	float m_myDepthLevel;
 	int m_AniLevel;
 
